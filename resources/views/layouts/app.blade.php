@@ -68,8 +68,19 @@
                                         @csrf
                                     </form>
                                 </div>
-                            </li>
+                            </li>     
                         @endguest
+                            @if (Route::has('home'))
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ route('profile') }}">{{ __('Profile') }}</a>
+                                </li>
+                            @endif
+                            
+                            @if (Route::has('profile'))
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ route('edit') }}">{{ __('Edit profile') }}</a>
+                                </li>
+                            @endif 
                     </ul>
                 </div>
             </div>

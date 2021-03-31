@@ -43,9 +43,10 @@ class ProfileController extends Controller
      * @param  \App\Models\Profile  $profile
      * @return \Illuminate\Http\Response
      */
-    public function edit(Profile $profile)
+    public function edit()
     {
-        return view('profile.edit');
+        return view('profile.edit', ['profile'=>auth()->user()->profile]);
+    
     }
 
     /**
@@ -57,80 +58,30 @@ class ProfileController extends Controller
      */
     public function update(Request $request, Profile $profile)
     {
-        // $request = [];
-        // $info = [] ;
-        // info->user_name = document.getElementById('user_name').value;
-        // info->gender = document.getElementById('last_name').value;
-        // $request->push(info);
-
-        $request = 
-
+ 
         $validated = $request->validate([
             'user_name' => ['string','max:255'],
-            'gender' => ['string', 'min:4', 'max:6'],
-            'description' => ['mediumText','max:255'],
+            'gender' => ['string'],
+            'description' => ['string','max:255'],
             'phone_number' => ['string','max:255'],
-            'D.O.B' => ['date'],
+            'D_O_B' => ['date'],
             'occupation' => ['string','max:40'],
             'nationality' => ['string','max:15'],
+            'image_url' =>['image', 'max:2500']
         ]);
-
-
-        
-        return back()->view('profile.edit')->withInput();
+        Profile::create([
+            'user_id' => auth()->id(),
+            'user_name' => request('user_name'),
+            'gender' => request('gender'),
+            'description' => request('description'),
+            'phone_number' => request('phone_number'),
+            'D_O_B' => request('D_O_B'),
+            'occupation' => request('occupation'),
+            'nationality' => request('nationality'),
+            'image_url' => url('storage/' . $request->file('image_url')->store('/uploads/profile_image',  'public')),
+            ]);
+            
+        return back();
 
     }
-
-
-
-
-
-
-
-
-
-
-//  /**
-//      * Show the form for creating a new resource.
-//      *
-//      * @return \Illuminate\Http\Response
-//      */
-//     public function create()
-//     {
-//         //
-//     }
-
-    // /**
-    //  * Store a newly created resource in storage.
-    //  *
-    //  * @param  \Illuminate\Http\Request  $request
-    //  * @return \Illuminate\Http\Response
-    //  */
-    // public function store(Request $request)
-    // {
-    //     //
-    // }
-
-    // /**
-    //  * Display the specified resource.
-    //  *
-    //  * @param  \App\Models\Profile  $profile
-    //  * @return \Illuminate\Http\Response
-    //  */
-    // public function show(Profile $profile)
-    // {
-    //     //
-    // }
-
-    // /**
-    //  * Remove the specified resource from storage.
-    //  *
-    //  * @param  \App\Models\Profile  $profile
-    //  * @return \Illuminate\Http\Response
-    //  */
-    // public function destroy(Profile $profile)
-    // {
-    //     //
-    // }
-
 }

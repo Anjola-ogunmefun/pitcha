@@ -3,25 +3,25 @@
 
 @section('content')
 
- <h3 style="text-align:right!important; margin-right:40px;" > Hello {{ ($name = auth()->user()->first_name) }}</h3>
+    @if ($profile->image_url ?? null))
+         <img style="height:120px; width:120px;margin:0px 40px 20px;border-radius:50%; float:right!important" src="{{ $profile->image_url }}" alt="profile image">
+     @endif 
+    
+ <h3 style="text-align:right!important; margin-right:40px;margin-top:20px" > Hello {{ ($name = auth()->user()->first_name) }}</h3>
 
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header">{{ __('Edit Profile') }}</div>
-
-             
+                <!-- <div class="card-header">{{ __('Edit Profile') }}</div> -->
 
                 <div class="card-body">
-                    <form method="get" action="{{ route('edit') }}" enctype="multipart/form-data">
+                    <form method="POST" action="{{ route('update') }}" enctype="multipart/form-data">
                         @csrf
-
                         <div class="form-group row">
                             <label for="user_name" class="col-md-4 col-form-label text-md-right">{{ __('User Name') }}</label>
-
                             <div class="col-md-6">
-                                <input id="user_name" type="text" class="form-control @error('user_name') is-invalid @enderror" name="user_name" value="{{ old('user_name') }}" required autocomplete="user_name" autofocus>
+                                <input id="user_name" type="text" class="form-control @error('user_name') is-invalid @enderror" name="user_name" value="{{ old('user_name') ?? $profile->user_name ?? null }}" autocomplete="user_name" autofocus>
 
                                 @error('user_name')
                                     <span class="invalid-feedback" role="alert">
@@ -35,7 +35,7 @@
                             <label for="phone_number" class="col-md-4 col-form-label text-md-right">{{ __('Phone') }}</label>
 
                             <div class="col-md-6">
-                                <input id="phone_number" type="tel" class="form-control @error('phone_number') is-invalid @enderror" name="phone_number" required autocomplete="phone_number">
+                                <input id="phone_number" type="tel" class="form-control @error('phone_number') is-invalid @enderror" name="phone_number" value="{{ old('phone_number') ?? $profile->phone_number ?? null}}" autocomplete="phone_number">
 
                                 @error('phone_number')
                                     <span class="invalid-feedback" role="alert">
@@ -49,7 +49,7 @@
                             <label for="gender" class="col-md-4 col-form-label text-md-right">{{ __('Gender') }}</label>
 
                                     <div class="col-md-6">
-                                        <select class="form-control" id="gender" name="gender" autofocus>
+                                        <select class="form-control" id="gender" name="gender" value="{{ old('gender') }}"autofocus>
                                             <option value="Male">Male</option>        
                                             <option value="Female">Female</option>        
                                             <option value="Others">Others</option>        
@@ -63,14 +63,12 @@
                                     </span>
                                 @enderror
                             </div>
-                        </div>
-
 
                         <div class="form-group row">
                             <label for="description" class="col-md-4 col-form-label text-md-right">{{ __('Description') }}</label>
 
                             <div class="col-md-6">
-                                <input id="description" type="text" class="form-control @error('description') is-invalid @enderror" name="description" value="{{ old('description') }}" required autocomplete="description">
+                                <input id="description" type="text" class="form-control @error('description') is-invalid @enderror" name="description" value="{{ old('description') ?? $profile->description ?? null}}"  autocomplete="description">
 
                                 @error('description')
                                     <span class="invalid-feedback" role="alert">
@@ -85,7 +83,7 @@
                             <label for="D_O_B" class="col-md-4 col-form-label text-md-right">{{ __('Date Of Birth') }}</label>
 
                             <div class="col-md-6">
-                            <input id="D_O_B" type="date" class="form-control @error('D_O_B') is-invalid @enderror" name="D_O_B" required autocomplete="D_O_B">
+                            <input id="D_O_B" type="date" class="form-control @error('D_O_B') is-invalid @enderror" name="D_O_B" value="{{ old('D_O_B') }}"autocomplete="D_O_B">
 
                                 @error('D_O_B')
                                     <span class="invalid-feedback" role="alert">
@@ -99,7 +97,7 @@
                             <label for="occupation" class="col-md-4 col-form-label text-md-right">{{ __('Occupation') }}</label>
 
                             <div class="col-md-6">
-                            <input id="occupation" type="text" class="form-control @error('occupation') is-invalid @enderror" name="occupation" required autocomplete="occupation">
+                            <input id="occupation" type="text" class="form-control @error('occupation') is-invalid @enderror" name="occupation" value="{{ old('occupation')?? $profile->occupation ?? null }}" autocomplete="occupation">
 
                                 @error('occupation')
                                     <span class="invalid-feedback" role="alert">
@@ -113,7 +111,7 @@
                             <label for="nationality" class="col-md-4 col-form-label text-md-right">{{ __('Nationality') }}</label>
 
                             <div class="col-md-6">
-                            <input id="nationality" type="text" class="form-control @error('nationality') is-invalid @enderror" name="nationality" required autocomplete="nationality">
+                            <input id="nationality" type="text" class="form-control @error('nationality') is-invalid @enderror" name="nationality" value="{{ old('nationalty') ?? $profile->nationality ?? null }}" autocomplete="nationality">
 
                                 @error('nationality')
                                     <span class="invalid-feedback" role="alert">
@@ -122,12 +120,25 @@
                                 @enderror
                             </div>
                         </div>
+
+                        <div class="form-group">
+                            <label for="image">Choose profile image</label>
+                            <input id="image" type="file" class="form-control @error('image') is-invalid @enderror" name="image_url" accept="image/*">
+                         </div>
+
+
                         <div class="form-group row mb-0">
                             <div class="col-md-6 offset-md-4">
-                                <button type="submit" class="btn btn-primary">
-                                    {{ __('Submit') }}
-                                </button>
-                            </div>
+
+                        <button type="submit" class="btn btn-primary" style="vertical-align:middle" >{{ __('Submit') }}</button>
+
+                        @if (session('status'))
+                             <div class="alert alert-success">
+                             {{ session('status') }}
+                           </div>
+                        @endif
+
+                        </div>
                         </div>
                     </form>
                 </div>
