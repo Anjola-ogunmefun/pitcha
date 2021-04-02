@@ -27,6 +27,11 @@ Route::middleware(['auth'])->group(function () {
     
     Route::get('/profile', [App\Http\Controllers\ProfileController::class, 'index'])->name('profile');
     Route::get('/profile/edit', [App\Http\Controllers\ProfileController::class, 'edit'])->name('edit');
-    Route::post('/profile/update', [App\Http\Controllers\ProfileController::class, 'update'])->name('update');
+    Route::put('/profile/update', [App\Http\Controllers\ProfileController::class, 'update'])->name('update');
+
+    Route::get('/post', [App\Http\Controllers\PostController::class, 'index'])->name('post');
+    Route::post('/post/create', [App\Http\Controllers\PostController::class, 'create'])->name('create');
+    Route::get('/post/show', [App\Http\Controllers\PostController::class, 'show'])->name('show');
+    Route::delete('/post/delete/{id}', [App\Http\Controllers\PostController::class, 'destroy'])->name('delete');
 
     });

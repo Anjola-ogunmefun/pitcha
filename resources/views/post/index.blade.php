@@ -1,25 +1,16 @@
-<!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+@extends('layouts.app')
 
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+@section('content')
 
-    <title>Pitcha</title>
-
-    <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
-
-    <!-- Styles -->
-    <style>
-        /*! normalize.css v8.0.1 | MIT License | github.com/necolas/normalize.css */
-        html {
+<style>
+      html {
             line-height: 1.15;
             -webkit-text-size-adjust: 100%
         }
 
         body {
-            margin: 0
+            margin: 0;
+            font-family: 'Nunito', sans-serif;
         }
 
         a {
@@ -35,44 +26,27 @@
             line-height: 1.5
         }
 
-        .button {
+        button {
         display: inline-block;
-        border-radius: 10px;
-        background-color: blue;
-        border: none;
-        color: #FFFFFF;
+        padding: 15px 25px;
+        font-size: 24px;
+        cursor: pointer;
         text-align: center;
-        font-size: 28px;
-        padding: 20px;
-        width: 150px;
-        transition: all 0.5s;
-        cursor: pointer;
-        margin: 5px;
+        text-decoration: none;
+        outline: none;
+        color: #fff;
+        background-color: #4CAF50;
+        border: none;
+        border-radius: 15px;
+        box-shadow: 0 9px #999;
         }
 
-        .button span {
-        cursor: pointer;
-        display: inline-block;
-        position: relative;
-        transition: 0.5s;
-        }
+        button:hover {background-color: #3e8e41}
 
-        .button span:after {
-        content: '\00bb';
-        position: absolute;
-        opacity: 0;
-        top: 0;
-        right: -20px;
-        transition: 0.5s;
-        }
-
-        .button:hover span {
-        padding-right: 25px;
-        }
-
-        .button:hover span:after {
-        opacity: 1;
-        right: 0;
+        button:active {
+        background-color: #3e8e41;
+        box-shadow: 0 5px #666;
+        transform: translateY(4px);
         }
         *,
         :after,
@@ -428,52 +402,32 @@
                 color: rgba(203, 213, 224, var(--text-opacity))
             }
         }
-    </style>
+</style>
+<body>
+            <div class="card-body">
+          <form method="POST" action="{{ route('create') }}" enctype="multipart/form-data">
+                     <input type="hidden" name="_token" value="{{ csrf_token() }}">
 
-    <style>
-        body {
-            font-family: 'Nunito', sans-serif;
-        }
-    </style>
-</head>
+                     <div class="form-group row">
+                            <label for="image"></label>
+                            <input id="image" type="file" class="form-control @error('image') is-invalid @enderror" name="image_url" accept="image/*">
+                         </div>
+       
 
-<body class="antialiased">
-    <div class="relative flex items-top justify-center min-h-screen bg-gray-100 dark:bg-gray-900 sm:items-center py-4 sm:pt-0">
-        @if (Route::has('login'))
-        <div class="hidden fixed top-0 right-0 px-6 py-4 sm:block">
-            @auth
-            <a href="{{ url('/home') }}" class="text-sm text-gray-700 underline">Home</a>
-            @else
-            <a href="{{ route('login') }}" class="text-sm text-gray-700 underline">Log in</a>
-            @endif
-            @if (Route::has('register'))
-            <a href="{{ route('register') }}" class="ml-4 text-sm text-gray-700 underline">Register</a>
-            @endif
-            @endauth
-        </div>
+                <div class="form-group row">
+                            <label for="comment" class="col-md-4 col-form-label text-md-right"></label>
 
-<main class=>
-    <h1 class="text-center"> Welcome to Pitcha!</h2>
-    <div class="text-lg">
-        <p> 
-        Pitcha is the social media platform that gives you the media presence you desire. <br>
-        With a growing number of users and outstanding networking experience, Pitcha promises to keep you entertained, informed and puts you just at the right spot you choose.    
-        </p>
+                            <div class="col-md-6">
+                            <input id="comment" type="text" placeholder="comment" class="form-control @error('comment') is-invalid @enderror" name="comment" value="{{ old('nationalty') ?? $post->comment  }}" autocomplete="nationality">
+                 <div class="col-md-6 offset-md-4">
+
+        <a href="{{ route('create') }}"><button class="button" style="vertical-align:middle margin-top:20px">{{ __('Add photo') }}</button></a>
     </div>
 
-    <div class="text-sm">
-        <p>
-        Enjoy all Pitcha has to offer by creating an account.
-        </p>
-    </div>
-
-    <div class="col-md-6 offset-md-4">
-    <a href="{{ route('register') }}"> <button type="submit" class="button shadow" style="vertical-align:middle"> <span>{{ __('Register') }}</span></button></a>
-    </div>
-        
-    </main>
-
+</form>
 
 </body>
 
-</html>
+
+@endsection
+

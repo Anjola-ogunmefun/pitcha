@@ -33,7 +33,7 @@ class ProfileController extends Controller
     {
         $profile = auth()->user();
 
-        return view('profile.index');
+        return view('profile.index', ['profile'=>auth()->user()->profile]);
     }
 
 
@@ -56,20 +56,21 @@ class ProfileController extends Controller
      * @param  \App\Models\Profile  $profile
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Profile $profile)
+    public function update(Request $request)
     {
  
         $validated = $request->validate([
-            'user_name' => ['string','max:255'],
-            'gender' => ['string'],
-            'description' => ['string','max:255'],
-            'phone_number' => ['string','max:255'],
-            'D_O_B' => ['date'],
-            'occupation' => ['string','max:40'],
-            'nationality' => ['string','max:15'],
-            'image_url' =>['image', 'max:2500']
+            'user_name' => ['string','max:255' ,'nullable',],
+            'gender' => ['string', 'nullable'],
+            'description' => ['string','max:255', 'nullable'],
+            'phone_number' => ['string','max:255', 'nullable'],
+            'D_O_B' => ['date', 'nullable'],
+            'occupation' => ['string','max:40', 'nullable'],
+            'nationality' => ['string','max:15', 'nullable'],
+            'image_url' =>['image', 'max:2500', 'nullable']
         ]);
-        Profile::create([
+
+        $form_value = [
             'user_id' => auth()->id(),
             'user_name' => request('user_name'),
             'gender' => request('gender'),
@@ -78,10 +79,17 @@ class ProfileController extends Controller
             'D_O_B' => request('D_O_B'),
             'occupation' => request('occupation'),
             'nationality' => request('nationality'),
-            'image_url' => url('storage/' . $request->file('image_url')->store('/uploads/profile_image',  'public')),
-            ]);
+            ];
             
-        return back();
+            if($request->hasFile('image_url')){
+                $form_value = array_merge($form_value, ['image_url' => url('storage/' . $request->file('image_url')->store('/uploads/profile_image',  'public'))
+                ]);
+            }      
+            
+            
+            auth()->user()->profile->update($form_value);
+
+         return back()->with(['status' => 'Profile has been updated successfully']);
 
     }
 }

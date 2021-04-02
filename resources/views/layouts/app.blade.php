@@ -81,7 +81,11 @@
                                     <a class="nav-link" href="{{ route('edit') }}">{{ __('Edit profile') }}</a>
                                 </li>
                             @endif 
-                    </ul>
+
+                            @if ($profile->image_url ?? null)
+                              <img style="height:50px; width:50px;margin-left:70px;display:flex;border-radius:50%; float:right!important" src="{{ $profile->image_url }}" alt="profile image">
+                             @endif 
+                     </ul>
                 </div>
             </div>
         </nav>
