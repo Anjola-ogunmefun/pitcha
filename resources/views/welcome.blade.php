@@ -471,7 +471,7 @@
     <a href="{{ route('register') }}"> <button type="submit" class="button shadow" style="vertical-align:middle"> <span>{{ __('Register') }}</span></button></a>
     </div>
         
-    </main>
+</main>
 
 
 </body>

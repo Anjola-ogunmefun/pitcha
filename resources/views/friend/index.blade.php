@@ -404,29 +404,40 @@
         }
 </style>
 <body>
-        <div class="card-body">
-          <form method="POST" action="{{ route('create') }}" enctype="multipart/form-data">
-                     <input type="hidden" name="_token" value="{{ csrf_token() }}">
+<form method="POST" action="{{ route('add') }}" enctype="multipart/form-data">
+    @csrf
 
-                     <div class="form-group row">
-                            <label for="image"></label>
-                            <input id="image" type="file" class="form-control @error('image') is-invalid @enderror" name="image_url" accept="image/*">
-                         </div>
-       
+        @if (session('status'))
+             <div class="alert alert-success">
+                {{ session('status') }}
+            </div>
+        @endif
 
-                <div class="form-group row">
-                            <label for="comment" class="col-md-4 col-form-label text-md-right"></label>
 
-                        <div class="col-md-6">
-                            <input id="comment" type="text" placeholder="comment" class="form-control @error('comment') is-invalid @enderror" name="comment" value="{{ old('nationalty') ?? $post->comment  }}" autocomplete="nationality">
-                        </div>
-                </div>
-
-        <a href="{{ route('create') }}"><button class="button" style="vertical-align:middle margin-top:20px">{{ __('Add photo') }}</button></a>
+    @forelse ($profiles as $profile)
+        <div class="">
+            <p style="margin-left:50px; font-size:20px">{{ $profile->user_name }}</p>
+            <img style="height:20%; width:5%;margin-left:70px;position:relative;" src="{{ $profile->image_url }}">
+        </div>
+    @empty 
+    <div>
+        <h2>No user found</h2>
     </div>
+    @endforelse
 
-</form>
+    <input type="hidden" name="friend_id" value="{{ $profile->user_id }}">
 
+    @if(auth()->id() !== $profile->user_id)
+    <div class="col-md-6 offset-md-4">
+   <button type="submit" class="button shadow" style="vertical-align:middle">
+
+   {{ auth()->user()->isFriendsWith($profile->user_id) ? __('Remove friend') : __('Add friend') }}
+   
+   </button>
+    </div>
+    @endif
+
+    </form>
 </body>
 
 

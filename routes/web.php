@@ -34,4 +34,13 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/post/show', [App\Http\Controllers\PostController::class, 'show'])->name('show');
     Route::delete('/post/delete/{id}', [App\Http\Controllers\PostController::class, 'destroy'])->name('delete');
 
+    Route::get('/search', [App\Http\Controllers\AddFriendController::class, 'search'])->name('search');
+    Route::post('/search/add', [App\Http\Controllers\AddFriendController::class, 'create'])->name('add');
+
+    Route::get('/friends', [App\Http\Controllers\AddFriendController::class, 'show'])->name('friends');
+
+    Route::get('/test', function () {
+      return auth()->user()->friends->pluck('friend_id');
     });
+
+});
