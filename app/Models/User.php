@@ -50,4 +50,14 @@ class User extends Authenticatable
     {
         return $this->hasOne(Profile::class);
     }
+
+    public function register()
+    {
+        return $this->hasOne(Register::class);
+    }
+
+    public function post()
+    {
+        return $this->hasOne(post::class);
+    }
 }
