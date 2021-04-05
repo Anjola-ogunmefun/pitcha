@@ -66,16 +66,16 @@ class RegisterController extends Controller
     protected function create(array $data)
     {
         $user = User::create([
-            'first_name' => $data['first_name'],
-            'last_name' => $data['last_name'],
+            'first_name' => ucfirst($data['first_name']),
+            'last_name' => ucfirst($data['last_name']),
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
         ]);
 
       $profile = $user->profile()->create([
+        'user_name' => $user['first_name'].$user['last_name'],
         'image_url' => url('/images/default_profile.png')
         ]);
-
         return $user;
     }
 }

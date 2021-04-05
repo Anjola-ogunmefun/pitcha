@@ -58,6 +58,16 @@ class User extends Authenticatable
 
     public function post()
     {
-        return $this->hasOne(post::class);
+        return $this->hasMany(post::class);
+    }
+
+    public function friends()
+    {
+        return $this->hasMany(Friend::class);
+    }
+
+    public function isFriendsWith($friend_id)
+    {
+        return $this->friends()->where('friend_id', $friend_id)->exists();
     }
 }
