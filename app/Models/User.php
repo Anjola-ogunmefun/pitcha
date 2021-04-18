@@ -56,7 +56,7 @@ class User extends Authenticatable
         return $this->hasOne(Register::class);
     }
 
-    public function post()
+    public function posts()
     {
         return $this->hasMany(post::class);
     }
@@ -69,5 +69,25 @@ class User extends Authenticatable
     public function isFriendsWith($friend_id)
     {
         return $this->friends()->where('friend_id', $friend_id)->exists();
+    }
+
+    public function combinedPosts()
+    {
+        if ($this->friends()->exists()) {
+            $authUserPosts = $this->posts;
+
+            $friendsPosts = $this->friends->flatMap(function($friend) {
+                return $friend->user->posts;
+            });
+
+            return $authUserPosts->merge($friendsPosts);
+
+        }
+        return $this->posts;
+    }
+
+
+    public function like(){
+        return $this->hasMany(Like::class);
     }
 }

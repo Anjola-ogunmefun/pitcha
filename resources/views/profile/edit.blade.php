@@ -120,8 +120,11 @@
                             </div>
                         </div>
 
+                        <!-- <div class="input-group mb-3">
+                            <input type="file" class="form-control" id="inputGroupFile02">
+                        </div> -->
+
                         <div class="form-group">
-                            <label for="image">Choose profile image</label>
                             <input id="image" type="file" class="form-control @error('image') is-invalid @enderror" name="image_url" accept="image/*">
                          </div>
 

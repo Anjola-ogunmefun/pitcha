@@ -11,16 +11,18 @@ class AddFriendController extends Controller
 
     public function search(Request $request){
 
-        $validated = $request->validate([
-            'user_name' => ['string','max:1000'],
+         $validated = $request->validate([
+            'user_name' => ['string','max:1000', 'required'],
         ]);
 
-        // Get the search value from the request
-        $search = $request->input('search');
+        $key = trim($request->get('search'));
 
-        $profiles = Profile::where('user_name', 'LIKE', "%{$search}%")->get();
+        $profiles = Profile::query()
+            ->where('user_name', 'like', "%{$key}%")
+            ->get();
 
-        return view('friend.index', ['profiles'=>$profiles]);
+
+        return view('friend.index', ['profiles' => $profiles ]);
 
     }
     /**
@@ -44,7 +46,7 @@ class AddFriendController extends Controller
     
         $user = auth()->user();
 
-        if(!$user->friends()->exists() || !$user->isFriendsWith($request['friend_id'])) {
+        if($user->friends()->doesntExist() || !$user->isFriendsWith($request['friend_id'])) {
             $user->friends()->create([
                 'friend_id' => $request['friend_id'],
             ]);

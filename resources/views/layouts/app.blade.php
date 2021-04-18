@@ -10,17 +10,25 @@
     <title>{{ config('app.name', 'Pitcha') }}</title>
 
     <!-- Scripts -->
-    <script src="{{ asset('js/app.js') }}" defer></script>
+    <!-- <script src="{{ asset('js/app.js') }}" defer></script> -->
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.0.0/css/font-awesome.min.css" rel="stylesheet">
+
 
     <!-- Styles -->
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">   
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 </head>
 <body>
-    <div id="app">
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js" integrity="sha384-w1Q4orYjBQndcko6MimVbzY0tgp4pWB4lZ7lr30WKz0vr/aWKhXdBNmNb5D92v7s" crossorigin="anonymous"></script>
+     
+     
+     <div id="app">
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
             <div class="container">
                 <a class="navbar-brand" href="{{ url('/') }}">
@@ -37,7 +45,7 @@
                     </ul>
 
                     <!-- Right Side Of Navbar -->
-                    <ul class="navbar-nav ml-auto">
+                    <ul class="navbar-nav ml-auto nav-pill">
                         <!-- Authentication Links -->
                         @guest
                             @if (Route::has('login'))
@@ -51,40 +59,38 @@
                                     <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
                                 </li>
                             @endif
-                        @else
-                            <li class="nav-item dropdown">
-                                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                    {{ Auth::user()->first_name }}
-                                </a>
 
+                        @else
+                                <li class="nav-item">
+                                     <a class="nav-link" href="{{ route('home') }}">{{ __('Home') }}</a>
+                                 </li>
+
+                                    @yield('nav-bar')
+
+                                    @if (auth()->user()->profile->image_url ?? null)
+                                    <img style="height:30px; width:60px;margin-left:250px;margin-right:-240px;margin-top:8px;border-radius:50%; float:right!important" src="{{ auth()->user()->profile->image_url }}" alt="profile image">
+                                    @endif 
+
+                        <li class="nav-item dropdown">
+                                    <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                                    {{ Auth::user()->first_name }}
+                                </a>                              
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
                                     <a class="dropdown-item" href="{{ route('logout') }}"
                                        onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
                                         {{ __('Logout') }}
                                     </a>
-
                                     <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
                                         @csrf
                                     </form>
-                                </div>
-                            </li>     
+                             </div>
+                             
+                         </li>     
                         @endguest
-                            @if (Route::has('home'))
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('profile') }}">{{ __('Profile') }}</a>
-                                </li>
-                            @endif
+                               
+                          
                             
-                            @if (Route::has('profile'))
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('edit') }}">{{ __('Edit profile') }}</a>
-                                </li>
-                            @endif 
-
-                            @if ($profile->image_url ?? null)
-                              <img style="height:50px; width:50px;margin-left:70px;display:flex;border-radius:50%; float:right!important" src="{{ $profile->image_url }}" alt="profile image">
-                             @endif 
                      </ul>
                 </div>
             </div>

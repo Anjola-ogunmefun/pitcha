@@ -21,6 +21,10 @@ window.Vue = require('vue').default;
 
 Vue.component('example-component', require('./components/ExampleComponent.vue').default);
 
+Vue.component('like-component', require('./components/LikeComponent.vue').default);
+Vue.component('dislike-component', require('./components/DislikeComponent.vue').default);
+
+
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application

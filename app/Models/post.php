@@ -26,4 +26,13 @@ class post extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function likes()
+    {
+        return $this->hasMany(Like::class);
+    }
+
+    public function isAuthUserLikedPost(){
+        return $this->likes()->where('user_id',  auth()->id())->exists();
+     }
 }

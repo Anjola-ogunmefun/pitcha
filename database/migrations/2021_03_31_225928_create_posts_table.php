@@ -11,13 +11,15 @@ class CreatePostsTable extends Migration
      *
      * @return void
      */
-    public function up()
+    public function up()                                                                                                                                                    
     {
         Schema::create('posts', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->string('image_url');
             $table->longText('comment')->nullable();
+            $table->unsignedBigInteger('like')->default(0);
+            $table->unsignedBigInteger('dislike')->default(0);  
             $table->timestamps();
         });
     }

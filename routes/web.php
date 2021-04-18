@@ -39,8 +39,13 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/friends', [App\Http\Controllers\AddFriendController::class, 'show'])->name('friends');
 
-    Route::get('/test', function () {
-      return auth()->user()->friends->pluck('friend_id');
-    });
+    Route::post('/like', [App\Http\Controllers\PostController::class, 'fetchLike']);
+    Route::post('/like/{id}', [App\Http\Controllers\PostController::class, 'handleLike']);
+     
+    Route::post('/dislike', [App\Http\Controllers\PostController::class, 'fetchDislike']);
+    Route::post('/dislike/{id}', [App\Http\Controllers\PostController::class, 'handleDislike']);
+
+    Route::post('/saveLike', [App\Http\Controllers\LikeController::class, 'create'])->name('like');
+
 
 });

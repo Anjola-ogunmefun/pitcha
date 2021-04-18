@@ -1,8 +1,13 @@
 <?php
 
 namespace App\Http\Controllers;
+use DB;
+
+use App\Models\Like;
+use App\Models\post;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Schema;
 
 class HomeController extends Controller
 {
@@ -23,6 +28,9 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+
+       $all_posts= auth()->user()->combinedPosts();
+ 
+       return view('home',['all_posts'=>$all_posts]);
     }
 }

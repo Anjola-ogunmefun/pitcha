@@ -1,8 +1,11 @@
 <?php
 
 namespace App\Http\Controllers;
+use DB;
 
 use App\Models\post;
+use App\Models\Like;
+
 use Illuminate\Http\Request;
 
 class PostController extends Controller
@@ -28,17 +31,22 @@ class PostController extends Controller
         
         $validated = $request->validate([
             'comment' => ['string','max:1000', 'nullable'],
-            'image_url' =>['image', 'max:2500']
+            'image_url' =>['image', 'max:2500', 'required']
         ]);
+
+        if(!$request['image_url']){
+
+            return back()->with(['status'=>'No file selected']);
+        }
+
         post::create([
             'user_id' => auth()->id(),
-            'comment' => request('comment'),
+            'comment' => $request['comment'],
             'image_url' => url('storage/' . $request->file('image_url')->store('/uploads/post',  'public')),
             ]);
 
-           $new_post =  auth()->user()->post->latest()->first();
-
-        return view('post.new', ['user_post'=>$new_post]);
+            $new_post =  auth()->user()->posts->last();
+        return back()->with(['status' => "Your photo was uploaded successfully!"]);
 
     }
 
@@ -59,15 +67,52 @@ class PostController extends Controller
      * @param  \App\Models\post  $post
      * @return \Illuminate\Http\Response
      */
-    public function show(post $post)
+    public function show()
     {
-     $great = post::all();
-     
-    //  dd($great->toArray());
-     
-      return view('post.all',['all_posts'=>$great]);
+
+         $all_posts =  auth()->user()->posts;
+
+      return view('post.all',['all_posts'=>$all_posts]);
 
     }
+
+    public function fetchLike(Request $request)
+    {
+        
+        $post = post::find($request->post);
+        return response()->json([
+            'post' => $post,
+        ]);
+    }
+ 
+    public function handleLike(Request $request)
+    {
+        $post = post::find($request->post);
+        $value = $post->like;
+        $post->like = $value+1;
+        $post->save(); 
+               
+    }    
+ 
+    public function fetchDislike(Request $request)
+    {
+        $post = post::find($request->post);
+        return response()->json([
+            'post' => $post,
+        ]);
+    }
+ 
+    public function handleDislike(Request $request)
+    {
+        $post = post::find($request->post);
+        $value = $post->dislike;
+        $post->dislike = $value+1;
+        $post->save();
+        return response()->json([
+            'message' => 'Disliked',
+        ]);
+    }
+
 
     /**
      * Show the form for editing the specified resource.
@@ -98,11 +143,10 @@ class PostController extends Controller
      * @param  \App\Models\post  $post
      * @return \Illuminate\Http\Response
      */
-    public function destroy(post $post)
-    {
-        $post->delete(); 
-        return back()->with(['status' => 'Photo has been deleted successfully']);
-        
+    public function destroy(post $id)
+    {        
+        $id->delete();
+        return back()->with(['status' => 'Photo has been deleted successfully']);   
 
     }
 }
